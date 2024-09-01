@@ -6,3 +6,8 @@ plaintext코드 복사
 
 # Maven 빌드 결과물
 target/
+
+# 기타 IDE 및 운영체제 관련 파일
+.metadata/
+*.log
+.DS_Store
