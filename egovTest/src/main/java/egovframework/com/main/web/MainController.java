@@ -53,6 +53,7 @@ public class MainController {
       ModelAndView mv = new ModelAndView();
       System.out.println(paramMap.toString());
       String pwd = paramMap.get("accountPwd").toString();
+      //paramMap.replace("accountPwd", sha256.encrypt(pwd));
       paramMap.replace("accountPwd", sha256.encrypt(pwd));
       String accountEmail = paramMap.get("email").toString() + "@" + paramMap.get("emailAddr").toString();
       paramMap.put("accountEmail", accountEmail);
