@@ -28,4 +28,18 @@
 		#{accountId}
 	)
 	</insert>
+	
+	<select id="selectLoginInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+	SELECT member_idx AS memberIdx,
+		 	member_id AS id,
+			member_name AS memberName,
+		 	member_use_yn AS memberUseYn
+	FROM tb_member
+	WHERE member_id = #{id}
+	AND member_pw = #{pwd}
+	
+	</select>
+	
+	
+	
 </mapper>
