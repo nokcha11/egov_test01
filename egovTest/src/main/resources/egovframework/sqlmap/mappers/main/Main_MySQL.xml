@@ -32,14 +32,32 @@
 	<select id="selectLoginInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
 	SELECT member_idx AS memberIdx,
 		 	member_id AS id,
-			member_name AS memberName,
-		 	member_use_yn AS memberUseYn
+			member_name AS name,
+		 	member_birth AS birth,
+		 	member_email AS email,
+		 	left(member_email, locate('@', member_email)-1) AS emailId,
+			substring(member_email, locate('@', member_email)+1) AS emailAddr,
+		 	member_use_yn AS UseYn
 	FROM tb_member
 	WHERE member_id = #{id}
 	AND member_pw = #{pwd}
 	
 	</select>
 	
+	<update id="updateMember" parameterType="java.util.HashMap">
+	UPDATE tb_member
 	
+	<set>
+		member_name = #{accountName},
+		member_birth = #{accountBirth},
+		member_email = #{accountEmail},
+		update_id = #{accountId},
+		update_date = CURRENT_TIMESTAMP(),
+		<if test= "pwd != null and pwd != '' and pwd != 'undefined'">
+			member_pw = #{pwd}
+		</if>
+	</set>
+	WHERE member_idx = #{memberIdx};
+	</update>
 	
 </mapper>

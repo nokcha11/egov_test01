@@ -9,4 +9,6 @@ public interface MainService {
    public int insertMember(HashMap<String, Object> paramMap);
    
    public HashMap<String, Object> selectLoginInfo (HashMap<String, Object> paramMap); 
+   
+   public int updateMember(HashMap<String, Object> paramMap);
 }

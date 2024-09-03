@@ -32,6 +32,12 @@ public class MainServiceImpl extends EgovAbstractServiceImpl implements MainServ
 		// TODO Auto-generated method stub
 		return mainDAO.selectLoginInfo(paramMap);
 	}
+
+	@Override
+	public int updateMember(HashMap<String, Object> paramMap) {
+	
+		return mainDAO.updateMember(paramMap);
+	}
 	   
 	   
 	   

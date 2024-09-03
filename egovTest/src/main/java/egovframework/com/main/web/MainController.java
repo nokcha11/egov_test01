@@ -3,6 +3,7 @@ package egovframework.com.main.web;
 import java.util.HashMap;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
@@ -40,9 +41,18 @@ public class MainController {
       return "login";
    }
    
+//   @RequestMapping("/logout.do")
+//   public String logout(HttpSession session) {
+//	   session.setAttribute("loginInfo",null);
+//	   return "redirect:/";
+//   }
+   
    @RequestMapping("/logout.do")
-   public String logout(HttpSession session) {
+   public String logout(HttpServletRequest request) {
+	   HttpSession session = request.getSession();
+	   session.removeAttribute("loginInfo");
 	   session.setAttribute("loginInfo",null);
+	   session.invalidate();
 	   return "redirect:/";
    }
    
@@ -115,4 +125,62 @@ public class MainController {
 	      mv.setViewName("jsonView");
 	      return mv;
    	}
+   
+   @RequestMapping("/mypage.do")
+   public String mypage(HttpServletRequest request, Model model) {
+	   HashMap<String, Object> loginInfo = null;
+	   HttpSession session = request.getSession();
+	   loginInfo = (HashMap<String, Object>) session.getAttribute("loginInfo");
+	   if (loginInfo != null ) {
+		   model.addAttribute("loginInfo", loginInfo);
+		   return "main/mypage";
+			   
+		} else {
+			return "redirect:/login.do";
+			
+		}
+	  
+	   
+   }
+   
+   @RequestMapping("/member/updateMember.do")
+   public ModelAndView updateMember(@RequestParam HashMap<String, Object> paramMap, HttpServletRequest request) throws Exception{
+	      ModelAndView mv = new ModelAndView();
+	      
+	      String encryptPwd = null;
+	      
+	      if (paramMap.get("pwd") != null) {
+	    	  // 입력받은 패스워드
+		      String pwd = paramMap.get("pwd").toString();
+		      
+		      try {
+		    	 encryptPwd = sha256.encrypt(pwd).toString();
+		    	 paramMap.replace("pwd", encryptPwd);
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
+		     
+
+		}
+	      
+	      String accountEmail = paramMap.get("email").toString() + "@" + paramMap.get("emailAddr").toString();
+	      paramMap.put("accountEmail", accountEmail);
+	      int resultChk = 0;
+	      resultChk = mainService.updateMember(paramMap);
+	      
+	      HttpSession session = request.getSession();
+	      
+	      HashMap<String, Object> loginInfo = null;
+	      loginInfo = mainService.selectLoginInfo(paramMap);
+	      
+		  session.setAttribute("loginInfo", paramMap);
+	    		  
+	      mv.addObject("resultChk",resultChk);
+	      mv.setViewName("jsonView");
+	      return mv;
+   }
+
+   
+   
 }

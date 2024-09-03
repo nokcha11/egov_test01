@@ -21,4 +21,9 @@ public class MainDAO extends EgovAbstractMapper{
     public HashMap<String, Object> selectLoginInfo (HashMap<String, Object> paramMap) {
     	return selectOne("selectLoginInfo", paramMap);
     }
+    
+    // update, delete, insert는 int형으로!!
+    public int updateMember (HashMap<String, Object> paramMap) {
+    	return update("updateMember", paramMap);
+    }
 }
