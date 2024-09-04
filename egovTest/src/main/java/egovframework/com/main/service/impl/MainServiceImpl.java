@@ -10,21 +10,20 @@ import egovframework.com.main.service.MainService;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("MainService")
-public class MainServiceImpl extends EgovAbstractServiceImpl implements MainService {
+public class MainServiceImpl extends EgovAbstractServiceImpl implements MainService{
+	@Resource(name="MainDAO")
+	private MainDAO mainDAO;
 
-   @Resource(name = "MainDAO")
-   private MainDAO mainDAO;
-
-   @Override
-   public int selectIdChk(HashMap<String, Object> paramMap) {
-      // TODO Auto-generated method stub
-      return mainDAO.selectIdChk(paramMap);
-   }
+	@Override
+	public int selectIdChk(HashMap<String, Object> paramMap) {
+		// TODO Auto-generated method stub
+		return mainDAO.selectIdChk(paramMap);
+	}
 
 	@Override
 	public int insertMember(HashMap<String, Object> paramMap) {
 		// TODO Auto-generated method stub
-	    return mainDAO.insertMember(paramMap);
+		return mainDAO.insertMember(paramMap);
 	}
 
 	@Override
@@ -35,10 +34,19 @@ public class MainServiceImpl extends EgovAbstractServiceImpl implements MainServ
 
 	@Override
 	public int updateMember(HashMap<String, Object> paramMap) {
-	
+		// TODO Auto-generated method stub
 		return mainDAO.updateMember(paramMap);
 	}
-	   
-	   
-	   
+
+	@Override
+	public HashMap<String, Object> selectMemberInfo(HashMap<String, Object> paramMap) {
+		// TODO Auto-generated method stub
+		return mainDAO.selectMemberInfo(paramMap);
 	}
+
+	@Override
+	public int deleteMemberInfo(int memberIdx) {
+		// TODO Auto-generated method stub
+		return mainDAO.deleteMemberInfo(memberIdx);
+	}
+}

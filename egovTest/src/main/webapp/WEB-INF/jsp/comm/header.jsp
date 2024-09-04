@@ -28,6 +28,7 @@
 		frm.attr("action", "/logout.do");
 		frm.submit();
 	}
+	
 	</script>
 </head>
 <header>
