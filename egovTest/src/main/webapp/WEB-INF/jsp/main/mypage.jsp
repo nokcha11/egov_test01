@@ -187,7 +187,7 @@
 			</tr>
 			<tr>
 				<td>
-					<input type="button" value="회원탈퇴" class="btn" style="background:red;"
+					<input type="button" value="회원탈퇴" class="btn" style="background:red; color:white";
 					onclick="fn_delete();">
 				</td>
 			</tr>

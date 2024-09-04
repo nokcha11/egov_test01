@@ -43,6 +43,23 @@
 	            }
 	         });
 	}
+	
+	function fn_findIdView() {
+		var frm = $("#frm");
+		frm.attr("method","POST");
+		frm.attr("action","/findIdView.do");
+		frm.submit();
+		
+	}
+	
+	function fn_findPwView(){
+		var frm = $("#frm");
+		frm.attr("method","POST");
+		frm.attr("action","/findPwView.do");
+		frm.submit();
+	}
+	
+	
 </script>
 </head>
 <body>
@@ -67,7 +84,12 @@
 					id="btn_login" name="btn_login"></td>
 			</tr>
 			<tr>
-				<td class="join"><a href="javascript:fn_createAccount();">회원가입</a></td>
+				<td class="join">
+				<a href="javascript:fn_findIdView();">아이디 찾기</a>
+				<a href="javascript:fn_findPwView();">비밀번호 찾기</a>
+				<a href="javascript:fn_createAccount();">회원가입</a>
+				</td>
+				
 			</tr>
 		</table>
 	</form>
