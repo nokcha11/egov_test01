@@ -34,6 +34,15 @@ public class BoardServiceImpl extends EgovAbstractServiceImpl implements BoardSe
 		int resultChk = 0;
 		
 		
+		String flag = paramMap.get("statusFlag").toString();
+		
+		
+		if ("I".equals(flag)) {
+			resultChk = boardDAO.insertBoard(paramMap);	
+		} else if ("U".equals(flag)){
+			resultChk = boardDAO.updateBoard(paramMap);
+		}
+		
 		return resultChk;
 	}
 	

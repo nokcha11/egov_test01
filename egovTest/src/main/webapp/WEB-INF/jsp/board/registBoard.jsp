@@ -24,7 +24,7 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		$("#btn_save").on('click', function(){
-
+			fn_save();
 		});
 		
 		$("#btn_list").on('click', function(){

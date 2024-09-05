@@ -12,6 +12,24 @@
 	
 	<insert id="insertBoard" parameterType="java.util.HashMap">
 		
+	INSERT INTO tb_board
+			(	
+				board_title,
+				board_content,
+				file_group_idx,
+				create_id,
+				update_id,
+				use_yn
+				)
+	VALUES (
+				#{boardTitle},
+				#{boardContent},
+				NULL,
+				#{memberId},
+				#{memberId},
+				'Y'
+	)
+		
 	</insert>
 	
 	<update id="updateBoard" parameterType="java.util.HashMap">

@@ -43,8 +43,12 @@
 
 	}
 	
-	function fn_insert(){
-		
+	function fn_insert(){ 
+		$("#flag").val("I");
+		var frm = $("#boardFrm");
+		frm.attr("method", "POST");
+		frm.attr("action", "/board/registBoard.do");
+		frm.submit();
 	}
 	
 	function fn_paging_move(pageIndex){
