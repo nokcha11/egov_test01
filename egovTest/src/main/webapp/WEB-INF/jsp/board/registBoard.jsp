@@ -23,14 +23,37 @@
 </style>
 <script type="text/javascript">
 	$(document).ready(function(){
+		var flag = "${flag}";
+		if (flag === "U") {
+			fn_detail("${boardIdx}");			
+		} 
+		
 		$("#btn_save").on('click', function(){
 			fn_save();
 		});
 		
 		$("#btn_list").on('click', function(){
-			
+			location.href="/board/boardDetail.do"; // 목록이동
 		});
 	});
+	
+	
+	function fn_detail(boardIdx){
+		$.ajax({
+		    url: '/board/getBoardDetail.do',
+		    method: 'post',
+		    data : { "boardIdx" : boardIdx},
+		    dataType : 'json',
+		    success: function (data, status, xhr) {
+		    	$("#boardTitle").val(data.boardInfo.boardTitle);
+		    	$("#boardContent").val(data.boardInfo.boardContent);
+		    	console.log(data.boardInfo);
+		    },
+		    error: function (data, status, err) {
+		    	console.log(err);
+		    }
+		});
+	}
 	
 	function fn_save(){
 		var frm = $("#saveFrm").serialize();
@@ -52,13 +75,16 @@
 		    	console.log(err);
 		    }
 		});
+
 	}
+	
 </script>
 </head>
 <body>
 	<div>
 		<form id="saveFrm" name="saveFrm">
 			<input type="hidden" id="statusFlag" name="statusFlag" value="${flag}"/>
+			<input type="hidden" id="boardIdx" name="boardIdx" value="${boardIdx}"/>
 			<table>
 				<tr>
 					<th>제목</th>
@@ -76,7 +102,7 @@
 		</form>
 	</div>
 	<div style="float:right;">
-		<input type="button" id="btn_save" name="btn_save" value="등록"/>
+		<input type="button" id="btn_save" name="btn_save" value="저장"/>
 		<input type="button" id="btn_list" name="btn_list" value="목록"/>
 	</div>
 </body>

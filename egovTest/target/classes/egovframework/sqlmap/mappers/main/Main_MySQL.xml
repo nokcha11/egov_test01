@@ -107,4 +107,6 @@
 		SET member_pw = #{memberPw}
 		WHERE member_idx = #{memberIdx}
 	</update>
+	
+	
 </mapper>
