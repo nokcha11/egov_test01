@@ -33,7 +33,7 @@
 		} */
 		
 		
-		/* 최신댓글 (상위)표시 and 대댓글 표시 */
+		/* 댓글 화면표시 최신댓글 (상위)표시 and 대댓글 표시 */
 		fn_getReply("${boardInfo.boardIdx}");
 		
 		$("#btn_update").on('click', function(){
@@ -80,7 +80,7 @@
 		});
 	}
 	
-	/* 최신댓글 (상위)표시 and 대댓글 표시*/
+	/* 댓글 화면표시 최신댓글 (상위)표시 and 대댓글 표시*/
 	function fn_getReply(boardIdx){
 		$.ajax({
 		    url: '/board/getBoardReply.do',

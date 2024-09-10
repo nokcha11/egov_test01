@@ -115,7 +115,7 @@
 				)
 	</insert>
 	
-	<!-- 최신댓글 (상위)표시 and 대댓글 표시 -->
+	<!-- 댓글 화면표시 최신댓글 (상위)표시 and 대댓글 표시 -->
 	<select id="selectBoardReply" parameterType="java.util.HashMap" resultType="java.util.HashMap">
 		with recursive cte as(
 			SELECT 1 AS reply_level,

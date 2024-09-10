@@ -163,7 +163,7 @@ public class BoardController {
 		return mv;
 	}
 	
-	// 최신댓글 (상위)표시 and 대댓글 표시
+	// 댓글 화면표시 최신댓글 (상위)표시 and 대댓글 표시
 	@RequestMapping("/board/getBoardReply.do")
 	public ModelAndView getBoardReply(@RequestParam HashMap<String, Object> paramMap, HttpSession session) {
 		ModelAndView mv = new ModelAndView();
