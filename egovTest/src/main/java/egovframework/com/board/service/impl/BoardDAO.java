@@ -35,4 +35,13 @@ public class BoardDAO extends EgovAbstractMapper{
 		return update("deleteBoard", paramMap);
 	}
 
+	public int insertReply(HashMap<String, Object> paramMap) {
+		return insert("insertReply", paramMap);
+	}
+	
+	// List 여러건 반환 <- SQL에서 parameterType="java.util.HashMap"
+	// 다수의 건 반환 -> selectList
+	public List<HashMap<String, Object>> selectBoardReply(HashMap<String, Object> paramMap){
+		return selectList("selectBoardReply", paramMap);
+	}
 }
