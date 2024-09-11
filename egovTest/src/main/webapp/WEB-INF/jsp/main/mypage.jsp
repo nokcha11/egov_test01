@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,29 +9,46 @@
 	integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
 	crossorigin="anonymous"></script>
 <link rel="stylesheet" href="/css/egovframework/join.css" />
-<title>회원가입</title>
+<title>MyPage</title>
 <script type="text/javascript">
 	$(document).ready(function(){
-		$("#btn_idChk").on('click', function(){
-			fn_idChk();
-		});
+		//$("#emailAddr").val("${loginInfo.emailAddr}").prop("selected", true);
+		fn_getMemberInfo();
 	});
-	function fn_join(){
-		var accountId = $("#accountId").val();
+	
+	function fn_getMemberInfo(){
+		var memberIdx = "${loginInfo.memberIdx}";
+		$.ajax({
+		    url: '/member/getMemberInfo.do',
+		    method: 'post',
+		    data : {
+		    	"memberIdx" : memberIdx
+		    },
+		    dataType : 'json',
+		    success: function (data, status, xhr) {
+				$("#memberIdx").val(data.memberInfo.memberIdx);
+				$("#accountId").val(data.memberInfo.id);
+				$("#accountName").val(data.memberInfo.name);
+				$("#accountBirth").val(data.memberInfo.birth);
+				$("#email").val(data.memberInfo.emailId);
+				$("#emailAddr").val(data.memberInfo.emailAddr).prop("selected", true);
+		    },
+		    error: function (data, status, err) {
+		    }
+		});
+	}
+	
+	function fn_save(){
+		
 		var pwd = $("#accountPwd").val();
 		var pwdConfirm = $("#accountPwdConfirm").val();
 		var name = $("#accountName").val();
 		var birth = $("#accountBirth").val();
 		var email = $("#email").val();
 		var emailAddr = $("#emailAddr").val();
-		var idChkYn = $("#idChkYn").val();
-		if(accountId == ""){
-			alert("ID를 입력하세요.");
-			return;
-		}else if(idChkYn == 'N'){
-			alert("아이디 중복검사를 해주시기 바랍니다.");
-			return;
-		}else if(pwd != pwdConfirm){
+		
+		
+		if(pwd != pwdConfirm){
 			alert("비밀번호를 확인해주세요.");
 			return;
 		}else if(name === ""){
@@ -46,16 +64,17 @@
 			// 회원가입이 되는 부분
 			var frm = $("#frm").serialize();
 			$.ajax({
-			    url: '/member/insertMember.do',
+			    url: '/member/updateMember.do',
 			    method: 'post',
 			    data : frm,
 			    dataType : 'json',
 			    success: function (data, status, xhr) {
 			        if(data.resultChk > 0){
-			        	alert("회원이 되신걸 축하드립니다.");
-			        	location.href="/login.do";
+			        	alert("수정되었습니다.");
+			        	fn_getMemberInfo();
+				        	
 			        }else{
-			        	alert("회원가입에 실패하였습니다.");
+			        	alert("수정에 실패하였습니다.");
 			        	return;
 			        }
 			    },
@@ -66,42 +85,43 @@
 		}
 	}
 	
-	function fn_idChk(){
-		var accountId = $("#accountId").val();
-		if(accountId ===""){
-			alert("중복 검사할 아이디를 입력해주세요.");
-		}else{
+	function fn_delete(){
+		if(confirm("탈퇴하시겠습니까?")){
+			var memberIdx = "${loginInfo.memberIdx}";
 			$.ajax({
-			    url: '/member/idChk.do',
+			    url: '/member/deleteMember.do',
 			    method: 'post',
 			    data : {
-			    	'accountId' : accountId
+			    	"memberIdx" : memberIdx
 			    },
 			    dataType : 'json',
 			    success: function (data, status, xhr) {
-			        if(data.idChk > 0){
-			        	alert("이미 등록된 아이디입니다.");
-			        	return;
-			        }else{
-			        	alert("사용하실 수 있는 아이디입니다.");
-			        	$("#idChkYn").val('Y');
-			        }
+					if(data.resultChk > 0){
+						alert("탈퇴되었습니다.");
+						var frm = $("#frm");
+						frm.attr("method", "POST");
+						frm.attr("action", "/logout.do")
+						frm.submit();
+					}
 			    },
 			    error: function (data, status, err) {
 			    }
 			});
+		}else{
+			return;
 		}
 	}
+	
 </script>
 
 </head>
 <body>
 	<form id="frm" name="frm">
-		<input type="hidden" id="idChkYn" name="idChkYn" value="N"/>
+		<input type="hidden" id="memberIdx" name="memberIdx" value=""/>
 		<table>
 			<tr>
 				<td>
-					<h2>회원가입</h2>
+					<h2>MyPage</h2>
 				</td>
 			</tr>
 			<tr>
@@ -109,8 +129,7 @@
 			</tr>
 			<tr>
 				<td>
-					<input type="text" class="text" style="width:180px;" id="accountId" name="accountId"/>
-					<input type="button" id="btn_idChk" name="btn_idChk" value="중복검사"/>
+					<input type="text" class="text" style="width:180px;" id="accountId" name="accountId" value="" readonly/>
 				</td>
 			</tr>
 			<tr>
@@ -134,7 +153,7 @@
 			</tr>
 			<tr>
 				<td>
-					<input type="text" class="text" id="accountName" name="accountName"/>
+					<input type="text" class="text" id="accountName" name="accountName" value=""/>
 				</td>
 			</tr>
 			<tr>
@@ -142,7 +161,7 @@
 			</tr>
 			<tr>
 				<td>
-					<input type="date" class="text" id="accountBirth" name="accountBirth"/>
+					<input type="date" class="text" id="accountBirth" name="accountBirth" value=""/>
 				</td>
 			</tr>
 			<tr>
@@ -150,20 +169,26 @@
 			</tr>
 			<tr>
 				<td>
-					<input type="text" class="email" id="email" name="email"> @ 
+					<input type="text" class="email" id="email" name="email" value=""> @ 
 					<select id="emailAddr" name="emailAddr">
 						<option value="">--주소를 선택해주세요--</option>
 						<option value="naver.com">naver.com</option>
-						<option value="gmail.com">gmail.com</option>
-						<option value="daum.net">daum.net</option>
+						<option value="gmail.com" >gmail.com</option>
+						<option value="daum.net" >daum.net</option>
 						<option value="nate.com">nate.com</option>
 					</select>
 				</td>
 			</tr>
 			<tr>
 				<td>
-					<input type="button" value="가입하기" class="btn"
-					onclick="fn_join();">
+					<input type="button" value="저장" class="btn"
+					onclick="fn_save();">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="button" value="회원탈퇴" class="btn" style="background:red;"
+					onclick="fn_delete();">
 				</td>
 			</tr>
 		</table>

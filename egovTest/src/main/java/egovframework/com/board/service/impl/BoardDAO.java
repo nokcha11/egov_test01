@@ -1,0 +1,47 @@
+package egovframework.com.board.service.impl;
+
+import java.util.HashMap;
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import egovframework.rte.psl.dataaccess.EgovAbstractMapper;
+
+@Repository("BoardDAO")
+public class BoardDAO extends EgovAbstractMapper{
+	
+	public List<HashMap<String, Object>> selectBoardList(HashMap<String, Object> paramMap){
+		return selectList("selectBoardList", paramMap);
+	}
+	
+	public int selectBoardListCnt(HashMap<String, Object> paramMap) {
+		return selectOne("selectBoardListCnt", paramMap);
+	}
+	
+	public int insertBoard(HashMap<String, Object> paramMap) {
+		return insert("insertBoard", paramMap);
+	}
+	
+	public int updateBoard(HashMap<String, Object> paramMap) {
+		return update("updateBoard", paramMap);
+	}
+	
+	
+	public HashMap<String, Object> selectBoardDetail(int boardIdx){
+		return selectOne("selectBoardDetail", boardIdx);
+	}
+	
+	public int deleteBoard(HashMap<String, Object> paramMap) {
+		return update("deleteBoard", paramMap);
+	}
+
+	public int insertReply(HashMap<String, Object> paramMap) {
+		return insert("insertReply", paramMap);
+	}
+	
+	// List 여러건 반환 <- SQL에서 parameterType="java.util.HashMap"
+	// 다수의 건 반환 -> selectList
+	public List<HashMap<String, Object>> selectBoardReply(HashMap<String, Object> paramMap){
+		return selectList("selectBoardReply", paramMap);
+	}
+}
