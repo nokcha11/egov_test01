@@ -31,9 +31,7 @@
 		}else{
 			$("#btn_update").show();
 		} */
-		
-		
-		/* 댓글 화면표시 최신댓글 (상위)표시 and 대댓글 표시 */
+		fn_getFileList(); 
 		fn_getReply("${boardInfo.boardIdx}");
 		
 		$("#btn_update").on('click', function(){
@@ -57,7 +55,6 @@
 		});
 	});
 	
-	// board delete
 	function fn_delete(){
 		
 		var boardIdx3 = $("#boardIdx").val();
@@ -80,7 +77,6 @@
 		});
 	}
 	
-	/* 댓글 화면표시 최신댓글 (상위)표시 and 대댓글 표시*/
 	function fn_getReply(boardIdx){
 		$.ajax({
 		    url: '/board/getBoardReply.do',
@@ -128,7 +124,10 @@
 	}
 	
 	function fn_replyInsert(replyIdx){
-		
+		var innerHtml = '';
+		innerHtml+='<input type="text" id="replyContent_'+replyIdx+'" name="replyContent_'+replyIdx+'" "placeholder="답글을 입력하세요." value=""/>';
+		innerHtml+='<input type="button" id="replyInsert_'+replyIdx+'" name="replyInsert_'+replyIdx+'" value="등록" onclick="javascript:fn_replyInsertSave(\''+replyIdx+'\');"/>';
+		$("#reply_"+replyIdx).append(innerHtml);
 	}
 	
 	function fn_replyInsertSave(replyIdx){
@@ -157,7 +156,6 @@
 		});
 	}
 	
-	// 댓글내용
 	function fn_comment(){
 		var boardIdx = $("#boardIdx").val();
 		var replyContent = $("#replyContent").val();
@@ -183,7 +181,6 @@
 		});
 	}
 	
-	/* 댓글 삭제 */
 	function fn_replyDelete(replyIdx){
 		$.ajax({
 		    url: '/board/deleteBoardReply.do',
@@ -207,6 +204,39 @@
 		
 	}
 	
+	function fn_getFileList(){
+		// /board/getFileList.do
+			var fileGroupIdx = "${boardInfo.fileGroupIdx}";
+		$.ajax({
+		    url: '/board/getFileList.do',
+		    method: 'post',
+		    data : { 
+		    	"fileGroupIdx" : fileGroupIdx
+		    },
+		    dataType : 'json',
+		    success: function (data, status, xhr) {
+		    	var innerHtml = '';
+		    	for(var i=0; i<data.fileList.length; i++){
+		    		innerHtml += '<span>';
+		    		innerHtml += '<a href="javascript:fn_down(\''+data.fileList[i].saveFilePath+'\',\''+data.fileList[i].saveFileName+'\');">';
+			    	innerHtml += data.fileList[i].fileOriginalName;
+			    	innerHtml += '</a></span><br>';	
+		    	}
+		    	$("#boardFileList").html(innerHtml);
+		    },
+		    error: function (data, status, err) {
+		    	console.log(status);
+		    }
+		});
+	}
+	
+	function fn_down(filePath, fileName){
+		$("#fileName").val(fileName);
+		$("#filePath").val(filePath)
+		var frm = $("#fileFrm");
+		frm.attr("action", "/board/getFileDown.do");
+		frm.submit();
+	}
 
 </script>
 </head>
