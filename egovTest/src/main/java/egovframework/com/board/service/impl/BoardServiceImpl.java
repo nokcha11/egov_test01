@@ -50,7 +50,7 @@ public class BoardServiceImpl extends EgovAbstractServiceImpl implements BoardSe
 		
       // file을 저장할 위치 지정하기
 		String filePath = "/ictsaeil/egovTest";
-		
+		int index = 0;
       // get(0)을 한 이유 : 첫번째 파일이 없으면 두번째 파일도 없기 때문에 (0)으로 설정
 
 		
@@ -77,8 +77,9 @@ public class BoardServiceImpl extends EgovAbstractServiceImpl implements BoardSe
 					// 파일 생성
 					// multipartFile로 받아온 file을 saveFile로 바꿔주기
 
-					File saveFile = new File(filePath, "file_"+today+"."+fileExt); 
+					File saveFile = new File(filePath, "file_"+today+"_"+index+"."+fileExt); 
 					file.transferTo(saveFile);
+					index++;
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
