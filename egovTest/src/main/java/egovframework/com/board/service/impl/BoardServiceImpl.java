@@ -40,14 +40,20 @@ public class BoardServiceImpl extends EgovAbstractServiceImpl implements BoardSe
 		
 		
 		String flag = paramMap.get("statusFlag").toString();
-		
+		int fileGroupIdx = 0;
 		
 		if ("I".equals(flag)) {
-			resultChk = boardDAO.insertBoard(paramMap);	
+			resultChk = boardDAO.insertBoard(paramMap);
+			fileGroupIdx = boardDAO.getFileGroupMaxIdx();
 		} else if ("U".equals(flag)){
 			resultChk = boardDAO.updateBoard(paramMap);
+			fileGroupIdx = boardDAO.getFileGroupIdx(paramMap);
+			
+			if (paramMap.get("deleteFiles") != null) {
+				resultChk = boardDAO.deleteFileAttr(paramMap);
+				
+			}
 		}
-		
       // file을 저장할 위치 지정하기
 		String filePath = "/ictsaeil/egovTest";
 		int index = 0;
@@ -79,6 +85,15 @@ public class BoardServiceImpl extends EgovAbstractServiceImpl implements BoardSe
 
 					File saveFile = new File(filePath, "file_"+today+"_"+index+"."+fileExt); 
 					file.transferTo(saveFile);
+					HashMap<String, Object> uploadFile =  new HashMap<String, Object>();
+					uploadFile.put("fileGroupIdx", fileGroupIdx);
+					uploadFile.put("originalFileName", file.getOriginalFilename());
+					uploadFile.put("saveFileName", "file_"+today+"_"+index+"."+fileExt);
+					uploadFile.put("saveFilePath", filePath);
+					uploadFile.put("fileSize", file.getSize());
+					uploadFile.put("fileExt", fileExt);
+					uploadFile.put("memberId", paramMap.get("memberId").toString());
+					resultChk = boardDAO.insertFileAttr(uploadFile);
 					index++;
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -112,6 +127,14 @@ public class BoardServiceImpl extends EgovAbstractServiceImpl implements BoardSe
 		// TODO Auto-generated method stub
 		return boardDAO.selectBoardReply(paramMap);
 	}
+
+	@Override
+	public List<HashMap<String, Object>> selectFileList(int fileGroupIdx) {
+		// TODO Auto-generated method stub
+		return boardDAO.selectFileList(fileGroupIdx);
+	}
+
+
 	
 	
 }

@@ -32,7 +32,7 @@ var fileCnt = 0;
 var totalCnt = 20;
 var fileNum = 0;
 var content_files = new Array();
-var deleteFiles = new Array();
+var deleteFiles = new Array(); // 삭제할 파일
 /* 파일 업로드 관련 변수 */
 
 	$(document).ready(function(){
@@ -70,7 +70,7 @@ var deleteFiles = new Array();
 					$("#boardFileList").append(
 								'<div id="file'+fileNum+'" style="float:left; width:100%">'
 								+'<font style="font-size:12px">' + f.name + '</font>'
-								+'<a href="javascript:fileDelete(\'file'+fileNum+'\')">X</a>'
+								+'<a href="javascript:fileDelete(\'file'+fileNum+'\',\'\')">X</a>'
 								+'</div>'
 					);
 					fileNum++;
@@ -83,9 +83,14 @@ var deleteFiles = new Array();
 	});
 	
 	// 지울 파일과 지우지 않을 파일 분류
-	function fileDelete(fileNum){
+	function fileDelete(fileNum, fileIdx){
 		var no = fileNum.replace(/[^0-9]/g, "");
-		content_files[no].is_delete = true;
+		
+		if (fileIdx != "") {
+			deleteFiles.push(fileIdx);
+		} else {
+			content_files[no].is_delete = true;
+		}
 		$("#"+fileNum).remove();
 		fileCnt--;
 	}
@@ -100,6 +105,33 @@ var deleteFiles = new Array();
 		    success: function (data, status, xhr) {
 				$("#boardTitle").val(data.boardInfo.boardTitle);
 				$("#boardContent").val(data.boardInfo.boardContent);
+				fn_fileList(data.boardInfo.fileGroupIdx);
+		    },
+		    error: function (data, status, err) {
+		    	console.log(err);
+		    }
+		});
+	}
+	
+	function fn_fileList(fileGroupIdx){
+		$.ajax({
+		    url: '/board/getFileList.do',
+		    method: 'post',
+		    //  '파라미터 명칭' : 실제 데이터
+		    data : { "fileGroupIdx" : fileGroupIdx},
+		    dataType : 'json',
+		    success: function (data, status, xhr) {
+				if (data.fileList.length > 0) {
+					for(var i=0; i<data.fileList.length; i++) {
+						$("#boardFileList").append(
+								'<div id="file'+i+'" style="float:left; width:100%">'
+								+'<font style="font-size:12px">' + data.fileList[i].fileOriginalName + '</font>'
+								+'<a href="javascript:fileDelete(\'file'+i+'\',\''+data.fileList[i].fileIdx+'\')">X</a>'
+								+'</div>'
+						);
+					}
+					fileNum = data.fileList.length;
+				}
 		    },
 		    error: function (data, status, err) {
 		    	console.log(err);
@@ -119,6 +151,11 @@ var deleteFiles = new Array();
 				formData.append("fileList", content_files[x]); 
 			}
 		}
+		if (deleteFiles.length >0) {
+		formData.append("deleteFiles", deleteFiles); 
+			
+		}
+
 		$.ajax({
 		    url: '/board/saveBoard.do',
 		    method: 'post',
